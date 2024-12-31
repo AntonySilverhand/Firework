@@ -2,15 +2,25 @@ from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
 import os
+import sys
 import time
+
+def get_resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 # Set up Edge options
 edge_options = Options()
 edge_options.add_argument('--start-maximized')  # Start browser maximized
 
 # Get the absolute path of the HTML file
-html_file_path = os.path.abspath('ultimate.html')
-file_url = f'file:///{html_file_path}'
+html_file_path = get_resource_path('ultimate.html')
+file_url = f'file:///{html_file_path.replace(os.sep, "/")}'
 
 # Create Edge driver instance
 driver = webdriver.Edge(options=edge_options)
